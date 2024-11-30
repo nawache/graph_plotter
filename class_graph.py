@@ -32,7 +32,7 @@ screen = pg.display.set_mode((WIDTH, HEIGHT), pg.HIDDEN)
 
 class CoordinateSystem:
 
-    def __init__(self, x_0, y_0, x_unit=40, y_unit=40):
+    def __init__(self, x_0=WIDTH // 2, y_0=HEIGHT // 2, x_unit=40, y_unit=40):
         self.x_unit = x_unit
         self.y_unit = y_unit
         self.x_0 = x_0
@@ -201,17 +201,30 @@ def get_new_center_mouse(x_pos, y_pos, units):
     new_y_pos_1 = y_pos - (y_pos % y_unit) + y_unit
     return new_x_pos_1, new_y_pos_1
 
-def main():
-    global x_unit, y_unit
-    screen = pg.display.set_mode((WIDTH, HEIGHT), pg.SHOWN)
-    pg.display.set_caption("My Graph")
-
-    screen.fill(WHITE)
-    axes = CoordinateSystem(WIDTH // 2, HEIGHT // 2)
+def redraw(axes):
+    axes.x_0, axes.y_0 = get_new_center(axes.zero, axes.units)
     my_graphs = create_graph_objects(axes.zero, axes.units)
+    screen.fill(WHITE)
     axes.draw()
     draw_graph_objects(my_graphs)
     pg.display.update()
+
+def reset(axes):
+    axes.x_unit = 40
+    axes.y_unit = 40
+    axes.x_0 = WIDTH // 2
+    axes.y_0 = HEIGHT // 2
+    my_graphs = create_graph_objects(axes.zero, axes.units)
+    screen.fill(WHITE)
+    axes.draw()
+    draw_graph_objects(my_graphs)
+    pg.display.update()
+
+def main():
+    screen = pg.display.set_mode((WIDTH, HEIGHT), pg.SHOWN)
+    pg.display.set_caption("My Graph")
+    axes = CoordinateSystem()
+    reset(axes)
 
     running = True
     while running:
@@ -219,36 +232,16 @@ def main():
         keys = pg.key.get_pressed()
         if keys[pg.K_RIGHT]:
             axes.x_0 += axes.x_unit
-            axes.x_0, axes.y_0 = get_new_center(axes.zero, axes.units)
-            my_graphs = create_graph_objects(axes.zero, axes.units)
-            screen.fill(WHITE)
-            axes.draw()
-            draw_graph_objects(my_graphs)
-            pg.display.update()
+            redraw(axes)
         if keys[pg.K_UP]:
             axes.y_0 -= axes.y_unit
-            axes.x_0, axes.y_0 = get_new_center(axes.zero, axes.units)
-            my_graphs = create_graph_objects(axes.zero, axes.units)
-            screen.fill(WHITE)
-            axes.draw()
-            draw_graph_objects(my_graphs)
-            pg.display.update()
+            redraw(axes)
         if keys[pg.K_LEFT]:
             axes.x_0 -= axes.x_unit
-            axes.x_0, axes.y_0 = get_new_center(axes.zero, axes.units)
-            my_graphs = create_graph_objects(axes.zero, axes.units)
-            screen.fill(WHITE)
-            axes.draw()
-            draw_graph_objects(my_graphs)
-            pg.display.update()
+            redraw(axes)
         if keys[pg.K_DOWN]:
             axes.y_0 += axes.y_unit
-            axes.x_0, axes.y_0 = get_new_center(axes.zero, axes.units)
-            my_graphs = create_graph_objects(axes.zero, axes.units)
-            screen.fill(WHITE)
-            axes.draw()
-            draw_graph_objects(my_graphs)
-            pg.display.update()
+            redraw(axes)
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
@@ -256,69 +249,32 @@ def main():
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_KP_8:
                     axes.y_unit *= 2
-                    axes.x_0, axes.y_0 = get_new_center(axes.zero, axes.units)
-                    my_graphs = create_graph_objects(axes.zero, axes.units)
-                    screen.fill(WHITE)
-                    axes.draw()
-                    draw_graph_objects(my_graphs)
-                    pg.display.update()
+                    redraw(axes)
                 if event.key == pg.K_KP_2:
                     axes.y_unit *= 0.5
-                    axes.x_0, axes.y_0 = get_new_center(axes.zero, axes.units)
-                    my_graphs = create_graph_objects(axes.zero, axes.units)
-                    screen.fill(WHITE)
-                    axes.draw()
-                    draw_graph_objects(my_graphs)
-                    pg.display.update()
+                    redraw(axes)
                 if event.key == pg.K_KP_6:
                     axes.x_unit *= 2
-                    axes.x_0, axes.y_0 = get_new_center(axes.zero, axes.units)
-                    my_graphs = create_graph_objects(axes.zero, axes.units)
-                    screen.fill(WHITE)
-                    axes.draw()
-                    draw_graph_objects(my_graphs)
-                    pg.display.update()
+                    redraw(axes)
                 if event.key == pg.K_KP_4:
                     axes.x_unit *= 0.5
-                    axes.x_0, axes.y_0 = get_new_center(axes.zero, axes.units)
-                    my_graphs = create_graph_objects(axes.zero, axes.units)
-                    screen.fill(WHITE)
-                    axes.draw()
-                    draw_graph_objects(my_graphs)
-                    pg.display.update()
+                    redraw(axes)
 
                 if event.key == pg.K_KP_MINUS:
                     axes.x_unit *= 0.5
                     axes.y_unit *= 0.5
-                    axes.x_0, axes.y_0 = get_new_center(axes.zero, axes.units)
-                    my_graphs = create_graph_objects(axes.zero, axes.units)
-                    screen.fill(WHITE)
-                    axes.draw()
-                    draw_graph_objects(my_graphs)
-                    pg.display.update()
+                    redraw(axes)
                 if event.key == pg.K_KP_PLUS:
                     axes.x_unit *= 2
                     axes.y_unit *= 2
-                    axes.x_0, axes.y_0 = get_new_center(axes.zero, axes.units)
-                    my_graphs = create_graph_objects(axes.zero, axes.units)
-                    screen.fill(WHITE)
-                    axes.draw()
-                    draw_graph_objects(my_graphs)
-                    pg.display.update()
+                    redraw(axes)
                 if event.key == pg.K_KP_0:    
-                    axes.x_unit = 40
-                    axes.y_unit = 40
-                    axes.x_0 = WIDTH // 2
-                    axes.y_0 = HEIGHT // 2
-                    my_graphs = create_graph_objects(axes.zero, axes.units)
-                    screen.fill(WHITE)
-                    axes.draw()
-                    draw_graph_objects(my_graphs)
-                    pg.display.update()
+                    reset(axes)
                 if event.key == pg.K_KP_DIVIDE:
                     screen.fill(WHITE)
                     axes.draw_extra_grid()
                     axes.draw()
+                    my_graphs = create_graph_objects(axes.zero, axes.units)
                     draw_graph_objects(my_graphs)
                     pg.display.update()
             if event.type == pg.MOUSEBUTTONDOWN:
