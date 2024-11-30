@@ -1,0 +1,6 @@
+graph;color;border
+(1 / math.sqrt(2 * math.pi) * 1) * math.exp(-0.5 * ((x - 0) / 1)**2);BLUE;(-8, 9)
+# x**3 - 2*x**2 + 6;RED;(-6, 6)
+# 3*x**2 - 4*x;GREEN;(-6, 6)
+math.sin(x);PURPLE;(-6, 6)
+math.cos(x);BLUE;(-9, 9)

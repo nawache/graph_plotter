@@ -1,5 +1,7 @@
+import csv
 import math
 import sys
+from ast import literal_eval
 import pygame as pg
 
 
@@ -16,15 +18,11 @@ BROWN = (165, 42, 42)
 FORESTGREEN = (34, 139, 34)
 PURPLE = (128, 0, 128)
 
-# x_unit = 40
-# y_unit = 40
-
 dx = 0.1
 
 h1 = 2
 h2 = 4
 h3 = 6
-
 
 pg.init()
 clock = pg.time.Clock()
@@ -132,15 +130,23 @@ class CoordinateSystem:
 
 class Graph:
 
-    def __init__(self, zero, units, functn, color, A, B):
-        n = int((B - A) // dx)
-        original_x_values = [round(A + k * dx, 1) for k in range(0, n + 2)]
+    def __init__(self, zero, units, functn, color, borders):
+        self.A = borders[0]
+        self.B = borders[1]
+
+        n = int((self.B - self.A) // dx)
+
+        original_x_values = [round(self.A + k * dx, 1) for k in range(0, n + 2)]
+
         self.x_0 = zero[0]
         self.y_0 = zero[1]
+
         self.x_unit = units[0]
         self.y_unit = units[1]
+
         self.functn = functn
         self.color = color
+
         self.x_values = [x * self.x_unit + self.x_0 for x in original_x_values]
         self.y_values = [self.y_0 - (eval(self.functn)) * self.y_unit for x in original_x_values]
 
@@ -150,40 +156,32 @@ class Graph:
                           (self.x_values[i], self.y_values[i]), 1)
 
 
-# def get_input():
-#     graphs = []
-#     colors = []
-#     borders = []
-#     while True:
-#         graph_input = input("Введите выражение (переменная - x) и цвет графика через запятую:\n").strip().split(", ")
-#         graph_func, color = graph_input
-#         graphs.append(graph_func)
-#         colors.append(color)
+def get_input():
+    with open("graphs.csv", mode = 'r') as file:
+        reader = csv.reader(file, delimiter = ";")
+        graphs = []
+        colors = []
+        borders = []
+        count = 0
+        for i, row in enumerate(reader):
+                if i == 0:
+                    continue
+                else:
+                    if row[0][0] == '#':
+                        continue
+                    else:
+                        graphs.append(row[0])
+                        colors.append(row[1])
+                        borders.append(literal_eval(row[2]))
 
-#         borders_input = input("Введите границы для участка графика через запятую:\n")
-#         if not borders_input:
-#             borders.append(DEFAULT_BORDERS)
-#         else:
-#             borders.append([float(element) for element in borders_input.strip().split(", ")])
+    return graphs, colors, borders
 
-#         response = input("Добавить ещё выражение? y/n\n")
-#         if response.strip().lower() in ("y", "yes"):
-#             continue
-#         break
-
-#     return graphs, colors, borders
+def create_graph_objects(zero, units):
+    graphs, colors, borders = get_input()
+    return [Graph(zero, units, graphs[i], colors[i], borders[i]) for i in range(len(graphs))]
 
 def draw_graph_objects(graph_objects):
     [graph_object.draw() for graph_object in graph_objects]
-
-def create_graph_objects(zero, units):
-    # graphs, colors, borders = get_input()
-    # return [Graph(graphs[i], colors[i], *borders[i]) for i in range(len(graphs))]
-    expression0 = Graph(zero, units, "(1 / math.sqrt(2 * math.pi) * 1) * math.exp(-0.5 * ((x - 0) / 1)**2)", BLUE, -8, 9.2)
-    expression1 = Graph(zero, units, "x**3 - 2*x**2 + 6",RED, -6, 6)
-    expression2 = Graph(zero, units, "3*x**2 - 4*x", GREEN, -6, 6)
-    expression3 = Graph(zero, units, "math.sin(x)", PURPLE, -20, 20)
-    return (expression0, expression1, expression2, expression3)
 
 def get_new_center(zero, units):
     x_unit, y_unit = units
@@ -303,8 +301,15 @@ def main():
                     draw_graph_objects(my_graphs)
                     pg.display.update()
                 if event.key == pg.K_KP_0:    
-                    print(axes.n_x, axes.n_y)
-                    print(axes.n_dx, axes.n_dy)
+                    axes.x_unit = 40
+                    axes.y_unit = 40
+                    axes.x_0 = WIDTH // 2
+                    axes.y_0 = HEIGHT // 2
+                    my_graphs = create_graph_objects(axes.zero, axes.units)
+                    screen.fill(WHITE)
+                    axes.draw()
+                    draw_graph_objects(my_graphs)
+                    pg.display.update()
             if event.type == pg.MOUSEBUTTONDOWN:
                 x_pos, y_pos = pg.mouse.get_pos()
                 axes.x_0, axes.y_0 = get_new_center_mouse(x_pos, y_pos, axes.units)
