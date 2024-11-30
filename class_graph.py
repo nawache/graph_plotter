@@ -17,6 +17,7 @@ WHITE = (255, 255, 255)
 BROWN = (165, 42, 42)
 FORESTGREEN = (34, 139, 34)
 PURPLE = (128, 0, 128)
+GREY = (244, 240, 236)
 
 dx = 0.1
 
@@ -111,16 +112,20 @@ class CoordinateSystem:
         [self.draw_x_notch(x) for x in self.dx_axis_values]
         [self.draw_y_notch(y) for y in self.dy_axis_values]
 
-    def draw_x_grid(self, x):
-        pg.draw.line(screen, LIGHT_GREEN, (x, 0), (x, HEIGHT), 1) 
+    def draw_x_grid(self, x, grid_color):
+        pg.draw.line(screen, grid_color, (x, 0), (x, HEIGHT), 1) 
 
-    def draw_y_grid(self, y):
-        pg.draw.line(screen, LIGHT_GREEN, (0, y), (WIDTH, y), 1) 
+    def draw_y_grid(self, y, grid_color):
+        pg.draw.line(screen, grid_color, (0, y), (WIDTH, y), 1) 
 
     def draw_grid(self):
-        [self.draw_x_grid(x) for x in self.x_axis_values]
-        [self.draw_y_grid(y) for y in self.y_axis_values]
+        [self.draw_x_grid(x, LIGHT_GREEN) for x in self.x_axis_values]
+        [self.draw_y_grid(y, LIGHT_GREEN) for y in self.y_axis_values]
 
+    def draw_extra_grid(self):
+        [self.draw_x_grid(x, GREY) for x in self.dx_axis_values]
+        [self.draw_y_grid(y, GREY) for y in self.dy_axis_values]
+    
     def draw(self):
         self.draw_grid()
         pg.draw.line(screen, BLACK, (0, self.y_0), (WIDTH, self.y_0), 1)
@@ -307,6 +312,12 @@ def main():
                     axes.y_0 = HEIGHT // 2
                     my_graphs = create_graph_objects(axes.zero, axes.units)
                     screen.fill(WHITE)
+                    axes.draw()
+                    draw_graph_objects(my_graphs)
+                    pg.display.update()
+                if event.key == pg.K_KP_DIVIDE:
+                    screen.fill(WHITE)
+                    axes.draw_extra_grid()
                     axes.draw()
                     draw_graph_objects(my_graphs)
                     pg.display.update()
