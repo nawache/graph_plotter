@@ -11,26 +11,6 @@ from constants import *
 pg.init()
 
 
-# def get_input():
-#     with open("graphs.csv", mode='r') as file:
-#         reader = csv.reader(file, delimiter=";")
-#         graphs = []
-#         colors = []
-#         borders = []
-#         for i, row in enumerate(reader):
-#             if i == 0:
-#                 continue
-#             else:
-#                 if row[0][0] == '#':
-#                     continue
-#                 else:
-#                     graphs.append(row[0])
-#                     colors.append(row[1])
-#                     borders.append(literal_eval(row[2]))
-
-#     return graphs, colors, borders
-
-
 def get_input():
     """Reads graphs from the CSV file, supporting both standard and parametric graphs."""
     try:
@@ -50,11 +30,6 @@ def get_input():
     except Exception as e:
         print(f"Error reading input: {e}")
         sys.exit(1)
-
-
-# def create_graph_objects(zero, units):
-#     graphs, colors, borders = get_input()
-#     return [Graph(zero, units, graphs[i], colors[i], borders[i]) for i in range(len(graphs))]
 
 
 def create_graph_objects(zero, units):

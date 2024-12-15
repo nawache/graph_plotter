@@ -1,4 +1,7 @@
-graph;color;border
+# Parametric: x(t); y(t); color; t_range; dt
+5 * math.cos(t); 3 * math.sin(t); BROWN; (0, 2 * math.pi); 0.1
 (0.1 * t)*math.cos(t); (0.1 * t)*math.sin(t); RED; (0, 10*math.pi); 0.05
 2*1*math.cos(t) + 1*1*math.cos(2*t); 2*1*math.sin(t) + 1*1*math.sin(2*t); BLUE; (0, 2*math.pi); 0.1
 t; math.sin(t); BLACK; (-5, 5); 0.05
+# Cartesian: f(x); color; range
+x**2; GREEN; (-10, 10)
