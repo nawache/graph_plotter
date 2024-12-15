@@ -18,7 +18,7 @@ def get_input():
             reader = csv.reader(file, delimiter=";")
             graphs = []
             for i, row in enumerate(reader):
-                if i == 0 or row[0].startswith("#"):
+                if row[0].startswith("#"):
                     continue
                 if len(row) == 5:  # Parametric graph
                     x_func, y_func, color, t_range, dt = row
