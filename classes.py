@@ -1,5 +1,6 @@
 import math
 
+import numpy as np
 import pygame as pg
 
 from constants import *
@@ -165,14 +166,13 @@ class ParametricGraph(Graph):
         self.calculate_coordinates()
 
     def calculate_coordinates(self):
-        """Calculate x and y coordinates based on parametric functions."""
-        t = self.t0
-        while t <= self.tN:
-            x = eval(self.x_func) * self.x_unit + self.x_0
-            y = self.y_0 - eval(self.y_func) * self.y_unit
-            self.x_values.append(x)
-            self.y_values.append(y)
-            t += self.dt
+        """Calculate x and y coordinates, ensuring the last point is included."""
+        # Generate t_values with precise stepping
+        t_values = np.linspace(self.t0, self.tN, int((self.tN - self.t0) / self.dt) + 1)
+
+        # Calculate x and y using list comprehensions
+        self.x_values = [eval(self.x_func) * self.x_unit + self.x_0 for t in t_values]
+        self.y_values = [self.y_0 - eval(self.y_func) * self.y_unit for t in t_values]
 
     def draw(self):
         """Draw the parametric graph."""
