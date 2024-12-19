@@ -57,13 +57,13 @@ class CoordinateSystem:
 
     @property
     def x_axis_values(self):
-        if self.x_unit < 20:
+        if self.x_unit < 40:
             self.x_unit = 20
         return [round(0 + k * self.x_unit, 1) for k in range(0, self.n_x + 1)]
 
     @property
     def y_axis_values(self):
-        if self.y_unit < 20:
+        if self.y_unit < 40:
             self.y_unit = 20
         return [round(0 + k * self.y_unit, 1) for k in range(0, self.n_y + 1)]
 
@@ -103,11 +103,50 @@ class CoordinateSystem:
         [self.draw_x_grid(x, GREY) for x in self.dx_axis_values]
         [self.draw_y_grid(y, GREY) for y in self.dy_axis_values]
 
+    def draw_x_labels(self):
+        """Draw labels for x-axis, excluding zero."""
+        label_step = max(1, round(40 / self.x_unit))
+        font = pg.font.Font(None, 24)
+        for x in range(-self.n_x, self.n_x + 1):
+            if x % label_step == 0 and x != 0:  # Skip zero
+                pixel_x = self.x_0 + x * self.x_unit
+                label = font.render(str(x), True, BLACK)
+                screen.blit(
+                    label, (pixel_x - label.get_width() // 2, self.y_0 + 10))
+
+    def draw_y_labels(self):
+        """Draw labels for y-axis, excluding zero."""
+        label_step = max(1, round(40 / self.y_unit))
+        font = pg.font.Font(None, 24)
+        for y in range(-self.n_y, self.n_y + 1):
+            if y % label_step == 0 and y != 0:  # Skip zero
+                pixel_y = self.y_0 - y * self.y_unit
+                label = font.render(str(y), True, BLACK)
+                screen.blit(
+                    label, (self.x_0 - 30, pixel_y - label.get_height() // 2))
+
+    def draw_centered_zero(self):
+        """Draw the zero in the specified centered cell."""
+        font = pg.font.Font(None, 24)
+        label = font.render("0", True, BLACK)
+        pixel_x = self.x_0 - self.x_unit  # (-1) * x_unit
+        pixel_y = self.y_0 + self.y_unit  # (-1) * y_unit
+        screen.blit(label, (pixel_x + self.x_unit // 2 - label.get_width() // 2,
+                            pixel_y - self.y_unit // 2 - label.get_height() // 2))
+
+    def draw_labels(self):
+        """Draw all axis labels."""
+        self.draw_x_labels()
+        self.draw_y_labels()
+        self.draw_centered_zero()
+
     def draw(self):
+        """Redraw the grid, notches, and labels."""
         self.draw_grid()
         pg.draw.line(screen, BLACK, (0, self.y_0), (WIDTH, self.y_0), 1)
         pg.draw.line(screen, BLACK, (self.x_0, 0), (self.x_0, HEIGHT), 1)
         self.draw_notches()
+        self.draw_labels()
 
 
 class Graph:
@@ -168,11 +207,14 @@ class ParametricGraph(Graph):
     def calculate_coordinates(self):
         """Calculate x and y coordinates, ensuring the last point is included."""
         # Generate t_values with precise stepping
-        t_values = np.linspace(self.t0, self.tN, int((self.tN - self.t0) / self.dt) + 1)
+        t_values = np.linspace(self.t0, self.tN, int(
+            (self.tN - self.t0) / self.dt) + 1)
 
         # Calculate x and y using list comprehensions
-        self.x_values = [eval(self.x_func) * self.x_unit + self.x_0 for t in t_values]
-        self.y_values = [self.y_0 - eval(self.y_func) * self.y_unit for t in t_values]
+        self.x_values = [eval(self.x_func) * self.x_unit +
+                         self.x_0 for t in t_values]
+        self.y_values = [self.y_0 -
+                         eval(self.y_func) * self.y_unit for t in t_values]
 
     def draw(self):
         """Draw the parametric graph."""
