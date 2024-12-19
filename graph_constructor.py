@@ -1,18 +1,21 @@
 import csv
 import math
 import sys
-
 from ast import literal_eval
+from typing import List, Tuple, Union
+
 import pygame as pg
 
 from classes import CoordinateSystem, Graph, ParametricGraph
-from constants import *
+from constants import WIDTH, HEIGHT, WHITE, clock, screen
 
 pg.init()
 
 
-def get_input():
-    """Reads graphs from the CSV file, supporting both standard and parametric graphs."""
+def get_input() -> List[Union[Tuple[str, str, str, str, float],
+                              Tuple[str, str, str]]]:
+    """Reads graphs from the CSV file, supporting both standard
+    and parametric graphs."""
     try:
         with open("graphs.csv", mode="r") as file:
             reader = csv.reader(file, delimiter=";")
@@ -34,7 +37,10 @@ def get_input():
         sys.exit(1)
 
 
-def create_graph_objects(zero, units):
+def create_graph_objects(
+        zero: Tuple[int, int],
+        units: Tuple[int, int]
+) -> List[Union[Graph, ParametricGraph]]:
     """Create graph objects from input."""
     inputs = get_input()
     graph_objects = []
@@ -49,11 +55,16 @@ def create_graph_objects(zero, units):
     return graph_objects
 
 
-def draw_graph_objects(graph_objects):
+def draw_graph_objects(
+    graph_objects: List[Union[Graph, ParametricGraph]]
+) -> None:
+    """Draw the graph objects."""
     [graph_object.draw() for graph_object in graph_objects]
 
 
-def get_new_center(zero, units):
+def get_new_center(zero: Tuple[int, int],
+                   units: Tuple[int, int]) -> Tuple[int, int]:
+    """Calculate new center based on units."""
     x_unit, y_unit = units
     x_pos, y_pos = zero
     new_x_pos_1 = x_pos - (x_pos % x_unit)
@@ -61,14 +72,18 @@ def get_new_center(zero, units):
     return new_x_pos_1, new_y_pos_1
 
 
-def get_new_center_mouse(x_pos, y_pos, units):
+def get_new_center_mouse(x_pos: int,
+                         y_pos: int,
+                         units: Tuple[int, int]) -> Tuple[int, int]:
+    """Calculate new center when mouse is clicked."""
     x_unit, y_unit = units
     new_x_pos_1 = x_pos - (x_pos % x_unit)
     new_y_pos_1 = y_pos - (y_pos % y_unit) + y_unit
     return new_x_pos_1, new_y_pos_1
 
 
-def draw_all(axes):
+def draw_all(axes: CoordinateSystem) -> None:
+    """Redraw all elements on the screen."""
     my_graphs = create_graph_objects(axes.zero, axes.units)
     screen.fill(WHITE)
     axes.draw()
@@ -76,13 +91,14 @@ def draw_all(axes):
     pg.display.update()
 
 
-def redraw(axes):
+def redraw(axes: CoordinateSystem) -> None:
     """Recalculate and redraw the axes and graphs."""
     axes.x_0, axes.y_0 = get_new_center(axes.zero, axes.units)
     draw_all(axes)
 
 
-def reset(axes):
+def reset(axes: CoordinateSystem) -> None:
+    """Reset the axes to the default state."""
     axes.x_unit = 40
     axes.y_unit = 40
     axes.x_0 = WIDTH // 2
@@ -90,7 +106,8 @@ def reset(axes):
     draw_all(axes)
 
 
-def main():
+def main() -> None:
+    """Main loop for the program, handling events and user input."""
     pg.display.set_caption("My Graph")
     axes = CoordinateSystem()
     reset(axes)
