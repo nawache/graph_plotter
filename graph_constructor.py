@@ -79,9 +79,6 @@ def draw_all(axes):
 def redraw(axes):
     """Recalculate and redraw the axes and graphs."""
     axes.x_0, axes.y_0 = get_new_center(axes.zero, axes.units)
-    # Prevent extremely small or zero unit sizes
-    axes.x_unit = max(1, axes.x_unit)
-    axes.y_unit = max(1, axes.y_unit)
     draw_all(axes)
 
 
@@ -120,13 +117,12 @@ def main():
                 sys.exit()
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_KP_PLUS:  # Zoom in
-                    axes.x_unit = max(1, axes.x_unit * 2)
-                    axes.y_unit = max(1, axes.y_unit * 2)
+                    axes.x_unit *= 2
+                    axes.y_unit *= 2
                     redraw(axes)
                 elif event.key == pg.K_KP_MINUS:  # Zoom out
                     axes.x_unit = max(20, axes.x_unit * 0.5)
                     axes.y_unit = max(20, axes.y_unit * 0.5)
-                    redraw(axes)
                     redraw(axes)
                 if event.key == pg.K_KP_0:
                     reset(axes)
