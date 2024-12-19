@@ -14,10 +14,6 @@ pg.init()
 
 def get_input() -> List[Union[Tuple[str, str, str, str, float],
                               Tuple[str, str, str]]]:
-<<<<<<< HEAD
-    """Reads graphs from the CSV file, supporting both standard
-    and parametric graphs."""
-=======
     """
     Reads graphs from the CSV file, supporting both standard and
     parametric graphs.
@@ -29,7 +25,6 @@ def get_input() -> List[Union[Tuple[str, str, str, str, float],
              For standard graphs, it includes ("standard", functn,
                                                color, borders).
     """
->>>>>>> 5ab4ab7 (Add docstrings and type hints)
     try:
         with open("graphs.csv", mode="r") as file:
             reader = csv.reader(file, delimiter=";")
@@ -55,9 +50,6 @@ def create_graph_objects(
         zero: Tuple[int, int],
         units: Tuple[int, int]
 ) -> List[Union[Graph, ParametricGraph]]:
-<<<<<<< HEAD
-    """Create graph objects from input."""
-=======
     """
     Create graph objects from input data.
 
@@ -66,7 +58,6 @@ def create_graph_objects(
                   for the x and y axes.
     :return: A list of Graph and ParametricGraph objects.
     """
->>>>>>> 5ab4ab7 (Add docstrings and type hints)
     inputs = get_input()
     graph_objects = []
     for graph_type, *params in inputs:
@@ -83,23 +74,16 @@ def create_graph_objects(
 def draw_graph_objects(
     graph_objects: List[Union[Graph, ParametricGraph]]
 ) -> None:
-<<<<<<< HEAD
-    """Draw the graph objects."""
-=======
     """
     Draw the graph objects on the screen.
 
     :param graph_objects: A list of Graph and ParametricGraph objects to draw.
     """
->>>>>>> 5ab4ab7 (Add docstrings and type hints)
     [graph_object.draw() for graph_object in graph_objects]
 
 
 def get_new_center(zero: Tuple[int, int],
                    units: Tuple[int, int]) -> Tuple[int, int]:
-<<<<<<< HEAD
-    """Calculate new center based on units."""
-=======
     """
     Calculate a new center position based on units.
 
@@ -108,7 +92,6 @@ def get_new_center(zero: Tuple[int, int],
                   ratios for the x and y axes.
     :return: The new center position as a tuple.
     """
->>>>>>> 5ab4ab7 (Add docstrings and type hints)
     x_unit, y_unit = units
     x_pos, y_pos = zero
     new_x_pos_1 = x_pos - (x_pos % x_unit)
@@ -119,9 +102,6 @@ def get_new_center(zero: Tuple[int, int],
 def get_new_center_mouse(x_pos: int,
                          y_pos: int,
                          units: Tuple[int, int]) -> Tuple[int, int]:
-<<<<<<< HEAD
-    """Calculate new center when mouse is clicked."""
-=======
     """
     Calculate a new center position based on a mouse click.
 
@@ -131,7 +111,6 @@ def get_new_center_mouse(x_pos: int,
                   ratios for the x and y axes.
     :return: The new center position as a tuple.
     """
->>>>>>> 5ab4ab7 (Add docstrings and type hints)
     x_unit, y_unit = units
     new_x_pos_1 = x_pos - (x_pos % x_unit)
     new_y_pos_1 = y_pos - (y_pos % y_unit) + y_unit
@@ -139,16 +118,12 @@ def get_new_center_mouse(x_pos: int,
 
 
 def draw_all(axes: CoordinateSystem) -> None:
-<<<<<<< HEAD
-    """Redraw all elements on the screen."""
-=======
     """
     Redraw all elements on the screen.
 
     :param axes: The CoordinateSystem object
                  representing the current grid and axes.
     """
->>>>>>> 5ab4ab7 (Add docstrings and type hints)
     my_graphs = create_graph_objects(axes.zero, axes.units)
     screen.fill(WHITE)
     axes.draw()
@@ -157,31 +132,23 @@ def draw_all(axes: CoordinateSystem) -> None:
 
 
 def redraw(axes: CoordinateSystem) -> None:
-<<<<<<< HEAD
-    """Recalculate and redraw the axes and graphs."""
-=======
     """
     Recalculate and redraw the axes and graphs.
 
     :param axes: The CoordinateSystem object
                  representing the current grid and axes.
     """
->>>>>>> 5ab4ab7 (Add docstrings and type hints)
     axes.x_0, axes.y_0 = get_new_center(axes.zero, axes.units)
     draw_all(axes)
 
 
 def reset(axes: CoordinateSystem) -> None:
-<<<<<<< HEAD
-    """Reset the axes to the default state."""
-=======
     """
     Reset the axes to their default state.
 
     :param axes: The CoordinateSystem object
                  representing the current grid and axes.
     """
->>>>>>> 5ab4ab7 (Add docstrings and type hints)
     axes.x_unit = 40
     axes.y_unit = 40
     axes.x_0 = WIDTH // 2
@@ -190,13 +157,9 @@ def reset(axes: CoordinateSystem) -> None:
 
 
 def main() -> None:
-<<<<<<< HEAD
-    """Main loop for the program, handling events and user input."""
-=======
     """
     Main loop for the program, handling events and user input.
     """
->>>>>>> 5ab4ab7 (Add docstrings and type hints)
     pg.display.set_caption("My Graph")
     axes = CoordinateSystem()
     reset(axes)
