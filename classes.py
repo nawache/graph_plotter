@@ -26,6 +26,8 @@ class CoordinateSystem:
         self.x_0 = x_0
         self.y_0 = y_0
 
+        self.extra_grid_flag = False
+
     @property
     def zero(self) -> tuple[int, int]:
         """Returns the coordinates of the origin as a tuple (x_0, y_0)."""
@@ -184,6 +186,9 @@ class CoordinateSystem:
 
     def draw(self) -> None:
         """Redraws the entire grid, notches, and labels."""
+        if self.extra_grid_flag:
+            self.draw_extra_grid()
+
         self.draw_grid()
         pg.draw.line(screen, BLACK, (0, self.y_0), (WIDTH, self.y_0), 1)
         pg.draw.line(screen, BLACK, (self.x_0, 0), (self.x_0, HEIGHT), 1)
